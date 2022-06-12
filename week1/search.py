@@ -53,6 +53,21 @@ def process_filters(filters_input):
 
     return filters, display_filters, applied_filters
 
+test_query = {
+    "size": 20,
+            "query": {
+                "match_all": {
+                    "query_string":{
+                        "fields": [
+                            "name", "shortDescription", "longDescription"
+                        ],
+                        "query": "Energizer",
+                        "phrase_slop": 2
+                    }
+                }
+
+        }
+}
 
 
 # Our main query route.  Accepts POST (via the Search box) and GETs via the clicks on aggregations/facets
@@ -69,6 +84,7 @@ def query():
     sort = "_score"
     sortDir = "desc"
     if request.method == 'POST':  # a query has been submitted
+        print("Post Request")
         user_query = request.form['query']
         if not user_query:
             user_query = "*"
@@ -78,8 +94,10 @@ def query():
         sortDir = request.form["sortDir"]
         if not sortDir:
             sortDir = "desc"
+        print("Post Query: {} Filters: {} Sort: {} SortDir:{}".format(user_query, filters, sort, sortDir))
         query_obj = create_query(user_query, [], sort, sortDir)
     elif request.method == 'GET':  # Handle the case where there is no query or just loading the page
+        print("Get Request")
         user_query = request.args.get("query", "*")
         filters_input = request.args.getlist("filter.name")
         sort = request.args.get("sort", sort)
@@ -94,7 +112,10 @@ def query():
     print("query obj: {}".format(query_obj))
 
     #### Step 4.b.ii
-    response = None   # TODO: Replace me with an appropriate call to OpenSearch
+    response = opensearch.search(
+        body = query_obj,
+        index = "bbuy_products"
+    )
     # Postprocess results here if you so desire
 
     #print(response)
@@ -107,15 +128,87 @@ def query():
 
 
 def create_query(user_query, filters, sort="_score", sortDir="desc"):
-    print("Query: {} Filters: {} Sort: {}".format(user_query, filters, sort))
+    print("Query: {} Filters: {} Sort: {} SortDir:{}".format(user_query, filters, sort, sortDir))
     query_obj = {
-        'size': 10,
+        'size': 50,
         "query": {
-            "match_all": {} # Replace me with a query that both searches and filters
+            "bool": {
+                "must": [
+                    {
+                        "query_string": {
+                            "fields": [
+                                "name^100", "shortDescription^50", "longDescription^10", "department"
+                                #"name", "shortDescription", "longDescription", "department"
+                                #"name"
+                            ],
+                            "query": user_query,
+                            "phrase_slop": 3
+                        }
+                    }
+                ],
+                "filter": filters
+            }
+        },
+        "sort": [
+            {
+                "regularPrice": {
+                    "order": sortDir
+                }
+            }
+        ],
+        "highlight": {
+            "fields": {
+                "name": {},
+                "shortDescription":{},
+                "longDescription":{}
+            }
         },
         "aggs": {
-            #### Step 4.b.i: create the appropriate query and aggregations here
-
+            "regularPrice":{
+                "range": {
+                "field": "regularPrice",
+                "ranges": [
+                    {
+                        "key": "$",
+                        "to": 100
+                    },
+                    {
+                        "key": "$$",
+                        "from": 100,
+                        "to": 200
+                    },
+                    {
+                        "key": "$$$",
+                        "from": 200,
+                        "to": 400
+                    },
+                    {
+                        "key": "$$$$",
+                        "from": 400,
+                        "to": 600
+                    },
+                    {
+                        "key": "$$$$$",
+                        "from": 600,
+                        "to": 800
+                    },
+                    {
+                        "key": "$$$$$$",
+                        "from": 800
+                    }
+                ]
+            }
+            },
+            "department": {
+                "terms": {
+                    "field": "department.keyword"
+                }
+            },
+            "missing_images":{
+                "missing": {
+                    "field": "missing_images"
+                }
+            }
         }
     }
     return query_obj

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectRootManager" version="2" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="UnattendedHostPersistenceState">
+    <option name="openedFilesInfos">
+      <list>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="5638" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/opensearch/opensearch_week1_toy.py" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="6393" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/week1/search.py" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="930" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/opensearch/opensearch_bulk_index.py" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="2701" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/week1/templates/aggregations.jinja2" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="624" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/opensearch/dev_tools_w1_level2_example.dev" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="946" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/week1/index_products.py" />
+        </OpenedFileInfo>
+        <OpenedFileInfo>
+          <option name="caretOffset" value="3952" />
+          <option name="fileUrl" value="file://$PROJECT_DIR$/opensearch/bbuy_products.json" />
+        </OpenedFileInfo>
+      </list>
+    </option>
+  </component>
+</project>

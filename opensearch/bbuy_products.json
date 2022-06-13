@@ -45,14 +45,11 @@
         },
         "name" : {
           "type" : "text",
+          "analyzer": "pattern",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
-              "ignore_above" : 256
-            },
-            "stemmed": {
-              "type": "text",
-              "analyzer": "english"
+              "ignore_above" : 512
             }
           }
         },
@@ -91,7 +88,7 @@
           "fields" : {
             "keyword" : {
               "type" : "keyword",
-              "ignore_above" : 512
+              "ignore_above" : 2048
             }
           }
         },"categoryPath": {
@@ -141,14 +138,11 @@
         },
         "shortDescription" : {
           "type" : "text",
+          "analyzer": "english",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
-              "ignore_above" : 512
-            },
-            "stemmed": {
-              "type": "text",
-              "analyzer": "english"
+              "ignore_above" : 2024
             }
           }
         },
@@ -181,16 +175,7 @@
         },
         "description" : {
           "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
-            },
-            "stemmed": {
-              "type": "text",
-              "analyzer": "english"
-            }
-          }
+          "analyzer": "english"
         },
         "manufacturer" : {
           "type" : "text",
@@ -211,48 +196,31 @@
           }
         },
         "image" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 512
-            }
-          }
+          "type" : "keyword"
         },
         "longDescription" : {
           "type" : "text",
+          "analyzer": "english",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
-              "ignore_above" : 256
-            },
-            "stemmed": {
-              "type": "text",
-              "analyzer": "english"
+              "ignore_above" : 4048
             }
           }
         },
         "longDescriptionHtml" : {
           "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
-            },
-            "stemmed": {
-              "type": "text",
-              "analyzer": "english"
-            }
-          }
+          "analyzer": "english"
         },
         "features" : {
           "type": "text",
-            "fields": {
-              "keyword": {
-                "type": "keyword",
-                "ignore_above": 2048
-              }
+          "analyzer": "english",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 2024
             }
+          }
         }
     }
   }

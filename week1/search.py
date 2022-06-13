@@ -130,28 +130,61 @@ def query():
 def create_query(user_query, filters, sort="_score", sortDir="desc"):
     print("Query: {} Filters: {} Sort: {} SortDir:{}".format(user_query, filters, sort, sortDir))
     query_obj = {
-        'size': 50,
+        'size': 20,
         "query": {
-            "bool": {
-                "must": [
-                    {
-                        "query_string": {
-                            "fields": [
-                                "name^100", "shortDescription^50", "longDescription^10", "department"
-                                #"name", "shortDescription", "longDescription", "department"
-                                #"name"
-                            ],
-                            "query": user_query,
-                            "phrase_slop": 3
-                        }
+            "function_score": {
+                "query":{
+                    "bool": {
+                        "must": [
+                            {
+                                "query_string": {
+                                    "fields": [
+                                        "name^100", "shortDescription^50", "longDescription^10", "department"
+                                    ],
+                                    "query": user_query,
+                                    "phrase_slop": 3
+                                }
+                            }
+                        ],
+                        "filter": filters
                     }
-                ],
-                "filter": filters
+                },
+                "boost_mode": "replace",
+                "score_mode": "avg",
+                "functions": [
+                    {
+                        "field_value_factor": {
+                            "field": "salesRankShortTerm",
+                            "missing": 100000000,
+                            "modifier": "reciprocal"
+                        }
+                    },
+                      {
+                          "field_value_factor": {
+                              "field": "salesRankMediumTerm",
+                              "missing": 100000000,
+                              "modifier": "reciprocal"
+                          }
+                      },
+                      {
+                          "field_value_factor": {
+                              "field": "salesRankLongTerm",
+                              "missing": 100000000,
+                              "modifier": "reciprocal"
+                          }
+                      }
+                ]
             }
+
         },
         "sort": [
             {
                 "regularPrice": {
+                    "order": sortDir
+                }
+            },
+            {
+                "name.keyword": {
                     "order": sortDir
                 }
             }
@@ -204,9 +237,14 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     "field": "department.keyword"
                 }
             },
+            "customerReviewCount": {
+                "terms": {
+                    "field": "customerReviewCount"
+                }
+            },
             "missing_images":{
                 "missing": {
-                    "field": "missing_images"
+                    "field": "image"
                 }
             }
         }

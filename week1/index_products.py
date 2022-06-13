@@ -199,7 +199,8 @@ def main(source_dir: str, index_name: str):
             if(len(docs) > 2000 ):
                 bulk(client, docs)
                 docs = []
-
+        if (len(docs) > 0):
+            bulk(client, docs)
     logger.info(f'the total number of indexed file : {numberOfIndexedFile}')
     logger.info(f'the total number of indexed document : {docs_indexed}')
     toc = time.perf_counter()
